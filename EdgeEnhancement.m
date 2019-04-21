@@ -17,15 +17,14 @@ function [ X_ ] = EdgeEnhancement( X )
         D(:,:,i) = normalize(D(:,:,i));
     end
     % Loop
-    ittr = 5;
-    desired_scale = 6;
+    ittr = 3; % The paper reccomends 3 itterations
+    desired_scale = N; % Use the all allowable scales
     output_image = ones(img_size);
-    
     for j = 1:ittr
         for i = 1:desired_scale
-           % Pointwise maximum 
-           max_scale = max(max(H(:,:,i), V(:,:,i)), D(:,:,i));
-           output_image = output_image .* max_scale;
+            % Pointwise maximum 
+            max_scale = max(max(H(:,:,i), V(:,:,i)), D(:,:,i));
+            output_image = output_image .* max_scale;
         end
     end
     X_ = output_image;

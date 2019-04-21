@@ -1,16 +1,16 @@
-function [ X_] = normalize( X )
+function [ X_] = normalize( X, feature )
     
-    if( length(X(X>3*std2(X)))/length(X(:)) > 0.01)
-        % Dist has a feature 
-        %a = sort(X(:));
-        %X_ = X ./ a(floor(length(X(:))*0.95));
-        lowhigh = stretchlim(X, 0.1);
-        X_ = imadjust(X,lowhigh,[0 1]);
-        X_(X_>1) = 1;
-    else
-        % Dist is not heavy tailed 
-        X_ = X ./ 3*std2(X);
-        X_(X_>1) = 1;       
+    % If the image we are dealing with has no features (i.e vessels)
+    % This method will work well, otherwise we will need to use 
+    % another method, by deault assume no feature
+    if(nargin < 2)
+        feature = false;
     end
-
+    
+    if( feature == false)
+        X_ = X ./ 3*std2(X);
+        X_(X_>1) = 1;     
+    else 
+        X_ = X ./ max(max(x));
+    end
 end

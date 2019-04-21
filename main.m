@@ -11,21 +11,11 @@ A = abs(A);
 % Create our superimposeed white squre object
 A(50:150, 50:150) = m * A(50:150, 50:150);
 
-% Show the resules along with magnitude of one of the rows
-%     figure;
-%     subplot(2,1,1)
-%     imshow(A, [])
-%     axis on
-%     subplot(2,1,2)
-%     plot(abs(A(100,:)))
-%     xlabel("Pixel")
-%     ylabel("Amplitude")
+% Show the resules along with horizontal cut
+DisplayImage(abs(A));
 
-% Edge Enhancment 
-output_image = EdgeEnhancement(A);
+% Edge Enhancment
+output_image = imadjust(EdgeEnhancement(A));
 
-figure
-subplot(2,1,1)
-imshow(output_image, []) 
-subplot(2,1,2)
-plot(output_image(100,:))
+% Show the resules along with horizontal cut
+DisplayImage(abs(output_image));
