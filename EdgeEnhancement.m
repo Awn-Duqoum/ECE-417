@@ -1,7 +1,7 @@
-function [ X_ ] = EdgeEnhancement( X )
+function [ X_ ] = EdgeEnhancement( X, ittr)
     % Determine the scales we can use
     img_size = size(X);
-    N = wmaxlev(img_size(1),'haar');
+    N = min(wmaxlev(img_size(1),'haar'), wmaxlev(img_size(2),'haar'));
     % Log 
     X = log(X);
     % SWT2
@@ -17,7 +17,9 @@ function [ X_ ] = EdgeEnhancement( X )
         D(:,:,i) = normalize(D(:,:,i));
     end
     % Loop
-    ittr = 3; % The paper reccomends 3 itterations
+    if(nargin < 2)
+        ittr = 3; % The paper reccomends 3 itterations
+    end
     desired_scale = N; % Use the all allowable scales
     output_image = ones(img_size);
     for j = 1:ittr
