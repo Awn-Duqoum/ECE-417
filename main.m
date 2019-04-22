@@ -41,17 +41,35 @@ DisplayImage(output_image);
 
 %% Part 2 - Edge Dtection with Geodesic Active Contour
 % Compute the gradient of the image
-[Gmag,Gdir] = imgradient(output_image);
+[Xx,Xy] = imgradientxy(output_image);
 
 % Compute g
 p = 1; % Recommend by paper
-g = 1/(1 + norm(Gmag)^p);
+g = 1./(1 + (abs(Xx)+abs(Xy))^p);
+[Gmag,~] = imgradient(g);
 
 % Define the starting U
-u0 = ones(size(output_image));
+u_old = output_image;
+u_new = u_old;
 
 % Define loop constants
-c = 0.5; % Honeslty no idea 
-[Umag,~] = imgradient(output_image);
-k = imdiv(Umag./norm(Umag));
+c = 0.5; % TBH no idea
+[Umag,~] = imgradient(u_new);
+[Ux,Uy] = imgradientxy(u_new);
+norm_U = (abs(Ux)+abs(Uy));
+k = imdiv(Umag/norm_U);
+beta = dot(g,(k+c))*(norm_U) + dot(Gmag,Umag/norm_U)*norm_U;
+delta = 0.001;
+
+% Preform itterations
+while(norm(beta) > 1)
+    u_new = u_old - delta * beta;
+    [Umag,~] = imgradient(u_new);
+    [Ux,Uy] = imgradientxy(u_new);
+    norm_U = (abs(Ux)+abs(Uy));
+    k = imdiv(Umag/norm_U);
+    beta = dot(g,(k+c))*(norm_U) + dot(Gmag,Umag/norm_U)*norm_U;
+    norm(beta)
+end
+
 
