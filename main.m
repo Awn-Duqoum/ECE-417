@@ -48,28 +48,40 @@ p = 1; % Recommend by paper
 g = 1./(1 + (abs(Xx)+abs(Xy))^p);
 [Gmag,~] = imgradient(g);
 
-% Define the starting U
-u_old = output_image;
-u_new = u_old;
+% Define the starting Surface evaluated at level 0 
+u = zeros(size(output_image));
+for i = 1:size(output_image,1)
+    for j = 1:size(output_image,2)
+        if( i == 1 || j == 1 || i == size(output_image,1) || j == size(output_image,2))
+            u(i,j) = 1;
+        end
+    end
+end
+u_old = u;
+u_new = u;
 
 % Define loop constants
-c = 0.5; % TBH no idea
-[Umag,~] = imgradient(u_new);
-[Ux,Uy] = imgradientxy(u_new);
-norm_U = (abs(Ux)+abs(Uy));
-k = imdiv(Umag/norm_U);
-beta = dot(g,(k+c))*(norm_U) + dot(Gmag,Umag/norm_U)*norm_U;
-delta = 0.001;
+c = 0.25; % Constant Erosion Parameter
+delta = 0.001; % Learning Rate
+beta = 100; % Random starting point
 
 % Preform itterations
-while(norm(beta) > 1)
-    u_new = u_old - delta * beta;
+figure
+while(beta > 0)
+    % Compute parameters
     [Umag,~] = imgradient(u_new);
-    [Ux,Uy] = imgradientxy(u_new);
-    norm_U = (abs(Ux)+abs(Uy));
+    norm_U = norm(Umag);
     k = imdiv(Umag/norm_U);
-    beta = dot(g,(k+c))*(norm_U) + dot(Gmag,Umag/norm_U)*norm_U;
-    norm(beta)
+    b2 = trace(Gmag'*(Umag/norm_U))*norm_U;
+    % Update image
+    for i = 1:size(u_new, 1)
+        for j = 1:size(u_new, 2)
+            beta = dot(g(i,j),(k(i,j)+c))*(norm_U) + b2;
+            u_new(i,j) = u_old(i,j) + delta * beta;  
+        end
+    end
+    % Update itterations
+    u_old = u_new;
+    % Output image 
+    imshow(u_new, [])
 end
-
-
