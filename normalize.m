@@ -2,7 +2,7 @@ function [ X_] = normalize( X, feature )
     
     % If the image we are dealing with has no features (i.e vessels)
     % This method will work well, otherwise we will need to use 
-    % another method, by deault assume no feature
+    % another method, by default assume no feature
     if(nargin < 2)
         feature = false;
     end

@@ -8,16 +8,16 @@ m = 5;
 A = 0.5*randn(img_size) + 1i*0.5*randn(img_size);
 A = abs(A);
 
-% Create our superimposeed white squre object
+% Create our superimposed white square object
 A(50:150, 50:150) = m * A(50:150, 50:150);
 
-% Show the resules along with horizontal cut
+% Show the results along with horizontal cut
 DisplayImage(abs(A));
 
-% Edge Enhancment
+% Edge Enhancement
 output_image = imadjust(EdgeEnhancement(A));
 
-% Show the resules along with horizontal cut
+% Show the result along with horizontal cut
 DisplayImage(output_image);
 
 %% Example #2 - Real Image
@@ -29,17 +29,27 @@ img = rgb2gray(imread('test.png'));
 % Make sure the image is in the right format
 img = abs(double(imresize(img, 2.^floor(log(size(img))/log(2)))));
 
-% Show the resules along with horizontal cut
+% Show the result along with horizontal cut
 DisplayImage(img);
 
-% Edge Enhancment
+% Edge Enhancement
 output_image = imadjust(EdgeEnhancement(img, 2));
 
-% Show the resules along with horizontal cut
+% Show the result along with horizontal cut
 DisplayImage(output_image);
+%% Part 2 - Edge Detection with Active Contour
+close all;
+% Create a mask for the starting seed
+mask = imbinarize(img/255);
+% Run the method
+BW = activecontour(output_image, mask);
 
-
-%% Part 2 - Edge Dtection with Geodesic Active Contour
+% Visualize the boundary
+figure;
+imshow(img, []);
+hold on;
+visboundaries(BW,'Color','b');
+%% Part 2 - Edge Detection with Geodesic Active Contour
 % Compute the gradient of the image
 [Xx,Xy] = imgradientxy(output_image);
 
@@ -65,7 +75,7 @@ c = 0.25; % Constant Erosion Parameter
 delta = 0.001; % Learning Rate
 beta = 100; % Random starting point
 
-% Preform itterations
+% Preform iterations
 figure
 while(beta > 0)
     % Compute parameters
@@ -80,7 +90,7 @@ while(beta > 0)
             u_new(i,j) = u_old(i,j) + delta * beta;  
         end
     end
-    % Update itterations
+    % Update iterations
     u_old = u_new;
     % Output image 
     imshow(u_new, [])

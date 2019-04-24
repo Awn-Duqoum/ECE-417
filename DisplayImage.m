@@ -1,5 +1,5 @@
 function [ ] = DisplayImage( X, row )
-    % This function displays an image along with a hortizontal cut
+    % This function displays an image along with a horizontal cut
     % If no row to cut at is provided a default value of 100 is used
     if(nargin < 2)
         row = 100;

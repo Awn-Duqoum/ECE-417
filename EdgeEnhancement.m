@@ -10,7 +10,7 @@ function [ X_ ] = EdgeEnhancement( X, ittr)
     H = abs(H);
     V = abs(V);
     D = abs(D);
-    % Normalization to maxiumum
+    % Normalization to maximum
     for i = 1:N        
         H(:,:,i) = normalize(H(:,:,i));
         V(:,:,i) = normalize(V(:,:,i));
@@ -18,13 +18,13 @@ function [ X_ ] = EdgeEnhancement( X, ittr)
     end
     % Loop
     if(nargin < 2)
-        ittr = 3; % The paper reccomends 3 itterations
+        ittr = 3; % The paper recommends 3 iterations
     end
     desired_scale = N; % Use the all allowable scales
     output_image = ones(img_size);
     for j = 1:ittr
         for i = 1:desired_scale
-            % Pointwise maximum 
+            % Point-wise maximum 
             max_scale = max(max(H(:,:,i), V(:,:,i)), D(:,:,i));
             output_image = output_image .* max_scale;
         end
